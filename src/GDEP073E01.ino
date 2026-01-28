@@ -154,10 +154,10 @@ void setup() {
     delay(1000);
     Serial1.println("Setup started");
 
-    pinMode(A14, INPUT);  // BUSY
-    pinMode(A15, OUTPUT); // RES
-    pinMode(A16, OUTPUT); // DC
-    pinMode(A17, OUTPUT); // CS
+    pinMode(13, INPUT);  // BUSY
+    pinMode(12, OUTPUT); // RES
+    pinMode(11, OUTPUT); // DC
+    pinMode(10, OUTPUT); // CS
     SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
     SPI.begin();
     Serial1.println("SPI initialized");
