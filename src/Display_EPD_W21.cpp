@@ -146,7 +146,7 @@ void PIC_display(const unsigned char* picData)
       EPD_W21_WriteDATA(data);
     }
   } 
-Serial.println("start");
+Serial1.println("start");
 
    //Refresh
     EPD_W21_WriteCMD(0x12);   //DISPLAY REFRESH   
@@ -154,7 +154,7 @@ Serial.println("start");
 
     delay(1);   //!!!The delay here is necessary, 200uS at least!!!     
     lcd_chkstatus();          //waiting for the electronic paper IC to release the idle signal
-Serial.println("done");
+Serial1.println("done");
 }
 
 

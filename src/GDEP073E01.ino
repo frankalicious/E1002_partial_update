@@ -28,14 +28,14 @@ void initChessboard() {
             chessboard[i][j] = ((i + j) % 2 == 0) ? WHITE : BLACK;  // 黑白交替
         }
     }
-    Serial.println("Chessboard initialized");
+    Serial1.println("Chessboard initialized");
 }
 
 // 显示整个棋盘（全屏刷新，1 字节 2 像素）
 void displayChessboard() {
     uint8_t* rowBuffer = (uint8_t*)malloc(SCREEN_WIDTH / 2);
     if (rowBuffer == NULL) {
-        Serial.println("Failed to allocate rowBuffer");
+        Serial1.println("Failed to allocate rowBuffer");
         return;
     }
 
@@ -74,7 +74,7 @@ void displayChessboard() {
     EPD_W21_WriteDATA(0x00);
     lcd_chkstatus();
 
-    Serial.println("Chessboard displayed");
+    Serial1.println("Chessboard displayed");
 }
 
 // 局部刷新函数（确保颜色正确写入）
@@ -133,7 +133,7 @@ void EPD_PartialWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height, 
     EPD_W21_WriteDATA(0x00);
     lcd_chkstatus();
 
-    Serial.println("Partial window updated");
+    Serial1.println("Partial window updated");
 }
 
 // 手动实现局部刷新（调用 EPD_PartialWindow）
@@ -146,13 +146,13 @@ void manualPartialUpdate(int gridX, int gridY, uint8_t color) {
     uint16_t y = gridY * BLOCK_HEIGHT;
 
     EPD_PartialWindow(x, y, BLOCK_WIDTH, BLOCK_HEIGHT, color);
-    Serial.println("Manual partial update completed");
+    Serial1.println("Manual partial update completed");
 }
 
 void setup() {
-    Serial.begin(115200);
+    Serial1.begin(115200, SERIAL_8N1, 44, 43);
     delay(1000);
-    Serial.println("Setup started");
+    Serial1.println("Setup started");
 
     pinMode(A14, INPUT);  // BUSY
     pinMode(A15, OUTPUT); // RES
@@ -160,7 +160,7 @@ void setup() {
     pinMode(A17, OUTPUT); // CS
     SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
     SPI.begin();
-    Serial.println("SPI initialized");
+    Serial1.println("SPI initialized");
     EPD_init(); //Full screen refresh initialization.
     PIC_display(gImage_1);//To Display one image using full screen refresh.
     EPD_sleep();//Enter the sleep mode and please do not delete it, otherwise it will reduce the lifespan of the screen.
@@ -174,7 +174,7 @@ void loop() {
     static int state = 0;
 
     if (state == 0) {
-        Serial.println("Displaying initial chessboard");
+        Serial1.println("Displaying initial chessboard");
         EPD_init();
         displayChessboard();
         EPD_sleep();
@@ -182,7 +182,7 @@ void loop() {
         delay(5000);
     }
     else if (state == 1) {
-        Serial.println("Updating (2, 2) to RED");
+        Serial1.println("Updating (2, 2) to RED");
         EPD_init();
         manualPartialUpdate(2, 2, RED);
         EPD_sleep();
@@ -190,7 +190,7 @@ void loop() {
         delay(5000);
     }
     else if (state == 2) {
-        Serial.println("Updating (4, 4) to YELLOW");
+        Serial1.println("Updating (4, 4) to YELLOW");
         EPD_init();
         manualPartialUpdate(4, 4, YELLOW);
         EPD_sleep();
@@ -198,16 +198,16 @@ void loop() {
         delay(5000);
     }
     else if (state == 3) {
-        Serial.println("Clearing display");
+        Serial1.println("Clearing display");
         EPD_init();
         PIC_display_Clear();
         EPD_sleep();
-        Serial.println("Display cleared");
+        Serial1.println("Display cleared");
         state = 4;
         delay(2000);
     }
     else {
-        Serial.println("Program finished");
+        Serial1.println("Program finished");
         while (1) {
             yield();
         }
